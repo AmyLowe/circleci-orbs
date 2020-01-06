@@ -84,6 +84,11 @@ aliases:
         type: "string"
         description: "Path to the json file to save the output variables to"
         default: ""
+    aws_role_to_assume: &aws_role_to_assume
+        aws_role_to_assume:
+          type: "env_var_name"
+          description: "The name of the environment variable containing the ARN of the aws role to assume."
+          default: "AWS_ROLE_TO_ASSUME_ARN"
 
   init-parameter-passthrough: &init-parameter-passthrough
     path: << parameters.path >>
@@ -93,7 +98,7 @@ aliases:
     var: << parameters.var >>
     var_file: << parameters.var_file >>
     parallelism: << parameters.parallelism >>
-
+    aws_role_to_assume: << parameters.aws_role_to_assume >>
 commands:
   in-workspace:
     description: "Run commands in an initialized terraform working directory"
@@ -102,6 +107,7 @@ commands:
       <<: *workspace
       <<: *backend_config
       <<: *backend_config_file
+      <<: *aws_role_to_assume
       steps:
         type: "steps"
         description: "Steps to run in the initialized terraform working directory"
@@ -112,6 +118,7 @@ commands:
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
       - steps: << parameters.steps >>
@@ -128,12 +135,14 @@ commands:
       <<: *parallelism
       <<: *label
       <<: *add_github_comment
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform plan << parameters.path >> << parameters.label >>"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
             include set_plan_args.sh
@@ -153,12 +162,14 @@ commands:
       <<: *auto_approve
       <<: *target
       <<: *output_path
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform apply << parameters.path >> << parameters.label >>"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
             include set_plan_args.sh
@@ -176,12 +187,14 @@ commands:
       <<: *var_file
       <<: *parallelism
       <<: *label
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform check << parameters.path >> << parameters.label >>"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
             include set_plan_args.sh
@@ -198,12 +211,14 @@ commands:
       <<: *var_file
       <<: *parallelism
       <<: *label
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform destroy << parameters.path >> << parameters.label >>"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
             include set_plan_args.sh
@@ -220,12 +235,14 @@ commands:
       <<: *var_file
       <<: *parallelism
       <<: *label
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform workspace new"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include new_workspace.sh
 
@@ -240,12 +257,14 @@ commands:
       <<: *var_file
       <<: *parallelism
       <<: *label
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform workspace delete"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
             include set_plan_args.sh
@@ -260,12 +279,14 @@ commands:
       <<: *backend_config
       <<: *backend_config_file
       <<: *output_path
+      <<: *aws_role_to_assume
     steps:
       - run:
           name: "terraform output << parameters.path >>"
           shell: /bin/bash -eo pipefail
           command: |
             include setup.sh
+            include assumerole.sh
             include init.sh
             include select_workspace.sh
 
@@ -337,6 +358,7 @@ jobs:
       - checkout
       - plan:
           <<: *init-parameter-passthrough
+          
 
   apply:
     executor: default

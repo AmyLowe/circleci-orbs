@@ -62,7 +62,7 @@ RUN curl -sL "https://storage.googleapis.com/kubernetes-helm/helm-v${HELM2_VERSI
 ENV HELM_HOME /root/.helm
 
 # helm 3
-RUN curl -sL "https://get.helm.sh/helm-v${HELM3_VERSION}-linux-amd64.tar.gz" | tar -xzvf- \
+RUN export HELM3_VERSION=3.0.2 && curl -sL "https://get.helm.sh/helm-v${HELM3_VERSION}-linux-amd64.tar.gz" | tar -xzvf- \
  && mv linux-amd64/helm /usr/local/bin/helm3 \
  && rm -rf helm*.tar.gz linux-amd64/
 

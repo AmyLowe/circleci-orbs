@@ -1,4 +1,4 @@
-/terraform/         @ovotech/production-eng
-/clair-scanner/     @ovotech/production-eng
-/aws-rotate-keys/   @mwz
-/rac-gcp-deploy/    @ovotech/reads-consumption
+/terraform/         @AmyPvt
+/clair-scanner/     @AmyPvt
+/aws-rotate-keys/   @AmyPvt
+/rac-gcp-deploy/    @AmyPvt

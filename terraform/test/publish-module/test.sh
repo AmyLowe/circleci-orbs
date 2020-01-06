@@ -4,7 +4,7 @@ set -e
 
 mkdir -p .circleci
 
-sed -e "s|ovotech/terraform@1|ovotech/terraform@dev:${USER}_test|" config.yml | circleci config process - >.circleci/config.yml
+sed -e "s|ovotech/terraform@1|alowesandbox/terraform@dev:${USER}_test|" config.yml | circleci config process - >.circleci/config.yml
 
 function expect_fail() {
     local JOB="$1"
