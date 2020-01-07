@@ -3,9 +3,9 @@ description: "Terraform orb. See https://github.com/ovotech/circleci-orbs/tree/m
 
 executors:
   default:
-    description: "Terraform 0.11 executor"
+    description: "Terraform 0.12 executor"
     docker:
-      - image: ovotech/terraform:0.11
+      - image: ovotech/terraform:0.12
   terraform-0_11:
     description: "Terraform 0.11 executor"
     docker:
@@ -99,6 +99,7 @@ aliases:
     var_file: << parameters.var_file >>
     parallelism: << parameters.parallelism >>
     aws_role_to_assume: << parameters.aws_role_to_assume >>
+
 commands:
   in-workspace:
     description: "Run commands in an initialized terraform working directory"
@@ -358,7 +359,6 @@ jobs:
       - checkout
       - plan:
           <<: *init-parameter-passthrough
-          
 
   apply:
     executor: default
