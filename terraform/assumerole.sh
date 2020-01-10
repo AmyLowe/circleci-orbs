@@ -1,5 +1,6 @@
 ROLE_ARN=${<< parameters.aws_role_to_assume >>}
 if [ -z "$ROLE_ARN" ]; then
+    echo "No role to assume, using std AWS authentication."
     exit 0
 fi
 echo "Running: aws sts assume-role --role-arn $ROLE_ARN"
